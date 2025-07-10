@@ -25,7 +25,6 @@ export const authConfig = {
             const publicRoutePath = publicRoutes.find(route => route.path === nextUrl.pathname);
             const isPrivateRoute = !publicRoutePath
 
-            console.log(nextUrl.pathname, { isPrivateRoute, isLoggedIn })
             if (isPrivateRoute) {
                 if (isLoggedIn) return true;
                 return false; // Redirect unauthenticated users to login page
@@ -40,7 +39,7 @@ export const authConfig = {
     },
     providers: [
         Credentials({
-            async authorize(credentials, request) {
+            async authorize(credentials) {
                 const parsedCredentials = z
                     .object({ email: z.string().email(), password: z.string().min(3) })
                     .safeParse(credentials);

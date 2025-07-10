@@ -7,7 +7,7 @@ import { Computer, Moon, Sun } from "lucide-react"
 import { useEffect, useState } from "react"
 
 export function ButtonToggleTheme() {
-    const { setTheme, theme, themes, resolvedTheme } = useTheme()
+    const { setTheme, themes, resolvedTheme } = useTheme()
     const [mounted, setMounted] = useState(false)
     useEffect(() => { setMounted(true) }, [])
     if (!mounted) return null
@@ -16,7 +16,7 @@ export function ButtonToggleTheme() {
         dark: Moon,
         system: Computer,
     }
-    const index = themes.findIndex((t) => t === theme)
+    const index = themes.findIndex((t) => t === resolvedTheme)
     const nextTheme = themes[(index + 1) % themes.length]
 
     const NextIcon = icons[nextTheme]

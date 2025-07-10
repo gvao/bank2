@@ -4,14 +4,12 @@ import { Button } from "./ui/button"
 
 export const ButtonLogout = () => {
     const session = useSession()
-    console.log({ session })
-
     if (session.status !== "authenticated") return null
     return (
         <Button
             className="cursor-pointer"
             variant={"destructive"}
-            onClick={async () => { console.log(await signOut({ redirectTo: "/login" })) }}
+            onClick={async () => { await signOut({ redirectTo: "/login" }) }}
         >
             Logout
         </Button>

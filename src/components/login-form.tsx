@@ -7,9 +7,10 @@ import { cn } from "../lib/utils"
 import { Button } from "./ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 import { Input } from "./ui/input"
-import { redirect, useRouter, useSearchParams } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { FormEvent } from "react"
 import { toast } from "sonner"
+import Image from "next/image"
 
 export function LoginForm({
   className,
@@ -19,7 +20,6 @@ export function LoginForm({
   const router = useRouter()
   const error = searchParams.get("error")
   const code = searchParams.get("code")
-  console.log({ error, code })
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault()
@@ -29,11 +29,8 @@ export function LoginForm({
       password: formData.get("password"),
     }
     const result = await signIn("credentials", { ...input, redirect: false, redirectTo: '/dashboard' })
-    if (result.error === "CredentialsSignin") {
-      console.log(result?.error)
-      toast.warning("Invalid credentials")
-    }
-    else router.push("/dashboard")
+    if (result.error === "CredentialsSignin") return toast.warning("Invalid credentials")
+    router.push("/dashboard")
   }
 
   return (
@@ -122,7 +119,8 @@ export function LoginForm({
             </div>
           </form>
           <div className="bg-muted relative hidden md:block">
-            <img
+            <Image
+
               src="/next.svg"
               alt="Image"
               className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
