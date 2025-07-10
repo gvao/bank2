@@ -7,7 +7,7 @@ import { cn } from "../lib/utils"
 import { Button } from "./ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 import { Input } from "./ui/input"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { FormEvent } from "react"
 import { toast } from "sonner"
 import Image from "next/image"
@@ -16,10 +16,7 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const searchParams = useSearchParams()
   const router = useRouter()
-  const error = searchParams.get("error")
-  const code = searchParams.get("code")
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault()
