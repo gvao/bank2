@@ -1,4 +1,4 @@
-import { Db, Document, Filter, InsertManyResult, MongoClient, ObjectId } from 'mongodb'
+import { Db, MongoClient, ObjectId } from 'mongodb'
 
 export class MongoDataSource {
     private uri: string
@@ -36,7 +36,7 @@ export class MongoDataSource {
         await db.collection(collectionName).deleteMany({})
     }
 
-    async find(collectionName: string, { _id, ...query }: any = {}): Promise<any[]> {
+    async find(collectionName: string, { _id, ...query }: { _id?: string, [k: string]: unknown } = {}): Promise<unknown[]> {
         const db = await this.getDb()
         const collection = db.collection(collectionName)
         if (!!_id) query._id = new ObjectId(_id)
@@ -44,13 +44,13 @@ export class MongoDataSource {
         return result
     }
 
-    async insertOne(collectionName: string, item: any): Promise<{ insertedId: string, }> {
+    async insertOne(collectionName: string, item: Record<string, unknown>): Promise<{ insertedId: string, }> {
         const db = await this.getDb()
         const result = await db.collection(collectionName).insertOne(item)
         return { insertedId: result.insertedId.toString(), }
     }
 
-    async update(collectionName: string, query: { id: string, [k: string]: any }, updateData: Record<string, any>) {
+    async update(collectionName: string, query: { id: string, [k: string]: unknown }, updateData: Record<string, unknown>) {
         const collection = await this.getCollection(collectionName)
         return await collection.updateOne(
             { _id: new ObjectId(query.id) },
