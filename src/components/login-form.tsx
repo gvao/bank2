@@ -33,9 +33,9 @@ export function LoginForm({
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden p-0">
-        <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8" onSubmit={onSubmit} >
-            <div className="flex flex-col gap-6">
+        <CardContent className="flex p-0">
+          <form className="p-6 md:p-8 w-full" onSubmit={onSubmit} >
+            <div className="flex flex-col grow gap-6">
 
               <CardHeader className="flex flex-col items-center text-center" >
                 <CardTitle className="text-2xl font-bold" >Welcome back</CardTitle>
@@ -115,14 +115,15 @@ export function LoginForm({
               </div>
             </div>
           </form>
-          <div className="bg-muted relative hidden md:block">
+          {/* <div className="bg-muted relative hidden md:block">
             <Image
-
               src="/next.svg"
               alt="Image"
+              width={500}
+              height={500}
               className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
             />
-          </div>
+          </div> */}
         </CardContent>
         <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
           By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
