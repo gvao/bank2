@@ -1,6 +1,7 @@
 import { LiHTMLAttributes } from "react"
 import { Card } from "../ui/card"
-import { getUsers, User } from "@/src/core"
+import { getUsers } from "@/src/(core)"
+import { User } from "@/src/(core)/domain/entity/user"
 
 export async function UsersList() {
     const users = await getUsers.execute()
