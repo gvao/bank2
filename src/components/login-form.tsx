@@ -9,12 +9,12 @@ import { Input } from "./ui/input"
 import { useRouter, useSearchParams } from "next/navigation"
 import { FormEvent, useState } from "react"
 import { toast } from "sonner"
+import { authClient } from "../lib/auth-client"
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const router = useRouter()
   const searchParams = useSearchParams()
 
   const [state, setState] = useState({
@@ -25,14 +25,23 @@ export function LoginForm({
   async function onSubmit(event: FormEvent) {
     event.preventDefault()
     const formData = new FormData(event.target as HTMLFormElement)
-    const input = {
-      email: formData.get("email"),
-      password: formData.get("password"),
-    }
-    const options = { redirect: false, redirectTo: '/dashboard' }
-    // const result = await signInUser(formData)
-    // if (result.error === "CredentialsSignin") return toast.warning("Invalid credentials")
-    // router.push("/dashboard")
+    const result = authClient.signIn.email({
+      email: formData.get("email")?.toString() || "",
+      password: formData.get("password")?.toString() || "",
+      callbackURL: '/dashboard'
+    }, {
+      onRequest: ctx => {
+        console.log('login request', ctx)
+      },
+      onSuccess: (ctx) => {
+        console.log('login successfully', ctx)
+        
+      },
+      onError: ctx => {
+        console.log('login failed', ctx)
+        toast.error("Invalid credentials", { richColors: true })
+      }
+    })
   }
 
   return (
