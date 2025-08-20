@@ -1,15 +1,20 @@
 "use client"
-import { signOut, useSession } from "next-auth/react"
+
+import { authClient } from "../lib/auth-client"
 import { Button } from "./ui/button"
 
 export const ButtonLogout = () => {
-    const session = useSession()
-    if (session.status !== "authenticated") return null
     return (
         <Button
             className="cursor-pointer"
             variant={"destructive"}
-            onClick={async () => { await signOut({ redirectTo: "/login" }) }}
+            onClick={async () => {
+                await authClient.signOut({
+                    fetchOptions: {
+                        onSuccess: () => console.log("Sign out successful")
+                    }
+                })
+            }}
         >
             Logout
         </Button>

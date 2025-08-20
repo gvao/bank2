@@ -8,4 +8,8 @@ export type GetUsersRepository = {
     getUsers: ({}: RepositoryQuery) => Promise<User[]>
 }
 
+export type InsertRepository<T> = {
+    insert(data: T): Promise<{ insertedId: string; }>
+}
+
 type RepositoryQuery = { [k: string]: unknown }

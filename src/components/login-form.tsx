@@ -2,21 +2,25 @@
 
 import Link from "next/link"
 import { Label } from "./ui/label"
-import { signIn } from "next-auth/react"
 import { cn } from "../lib/utils"
 import { Button } from "./ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 import { Input } from "./ui/input"
-import { useRouter } from "next/navigation"
-import { FormEvent } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { FormEvent, useState } from "react"
 import { toast } from "sonner"
-import Image from "next/image"
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const router = useRouter()
+  const searchParams = useSearchParams()
+
+  const [state, setState] = useState({
+    email: searchParams.get("email") || "",
+    password: searchParams.get("password") || "",
+  })
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault()
@@ -25,9 +29,10 @@ export function LoginForm({
       email: formData.get("email"),
       password: formData.get("password"),
     }
-    const result = await signIn("credentials", { ...input, redirect: false, redirectTo: '/dashboard' })
-    if (result.error === "CredentialsSignin") return toast.warning("Invalid credentials")
-    router.push("/dashboard")
+    const options = { redirect: false, redirectTo: '/dashboard' }
+    // const result = await signInUser(formData)
+    // if (result.error === "CredentialsSignin") return toast.warning("Invalid credentials")
+    // router.push("/dashboard")
   }
 
   return (
@@ -52,7 +57,7 @@ export function LoginForm({
                   type="email"
                   name="email"
                   placeholder="m@example.com"
-                  defaultValue={'email@email.com'}
+                  defaultValue={state.email}
                   autoFocus
                   required
                 />
@@ -67,7 +72,9 @@ export function LoginForm({
                     Forgot your password?
                   </Link>
                 </div>
-                <Input id="password" type="password" name="password" required defaultValue={'1234'} />
+                <Input id="password" type="password" name="password" required
+                  defaultValue={state.password}
+                />
               </div>
 
               <Button type="submit" className="w-full">
