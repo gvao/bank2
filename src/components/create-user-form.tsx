@@ -20,6 +20,7 @@ const formSchema = z.object({
 type formType = z.infer<typeof formSchema>
 
 export function CreateUserForm() {
+
     const form = useForm<formType>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -28,7 +29,6 @@ export function CreateUserForm() {
         },
     })
 
-    
     const { push } = useRouter()
     
     async function onSubmit(data: formType) {
@@ -38,9 +38,6 @@ export function CreateUserForm() {
             password: data.password,
             name: data.email.split("@")[0],
         }, {
-            onRequest: (ctx) => {
-                console.log(`on request: `, ctx)
-            },
             onSuccess: (ctx) => {
                 console.log(`on success: `, ctx)
                 form.reset()
