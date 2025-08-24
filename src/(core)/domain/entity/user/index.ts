@@ -17,4 +17,8 @@ export class UserFactory {
         const id = crypto.randomUUID()
         return new User({ id, email, password })
     }
+
+    static load({ email, password, id }: UserDto) {
+        return new User({ email, password, id })
+    }
 }

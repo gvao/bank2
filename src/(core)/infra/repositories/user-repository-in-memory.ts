@@ -1,9 +1,7 @@
-
-
-import { GetUsersRepository, GetUserByEmailRepository } from "../../application/repository/interface"
 import { User, UserFactory } from "../../domain/entity/user"
+import { UserRepository } from "./user-repository.interface"
 
-export class UserRepositoryInMemory implements GetUsersRepository, GetUserByEmailRepository {
+export class UserRepositoryInMemory implements UserRepository {
     users: User[]
     constructor(users: User[] = []) {
         this.users = users
@@ -11,6 +9,9 @@ export class UserRepositoryInMemory implements GetUsersRepository, GetUserByEmai
         senhas.forEach(password => {
             this.add(UserFactory.create({ email: `email${password}@email.com`, password }))
         })
+    }
+    async insert(user: User): Promise<void> {
+        this.users.push(user)
     }
 
     async getUsers({ }) {
@@ -24,3 +25,4 @@ export class UserRepositoryInMemory implements GetUsersRepository, GetUserByEmai
         this.users.push(user)
     }
 }
+

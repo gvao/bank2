@@ -4,8 +4,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "../components/Header";
 import { UsersList } from "../components/UsersList";
-import { SessionProvider } from "next-auth/react";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "../components/ui/sonner";
+
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,7 +18,6 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
-        <SessionProvider>
           <ThemeProvider
             defaultTheme="system"
             attribute="class"
@@ -26,13 +25,13 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
             disableTransitionOnChange
           >
             <Header />
-            {children}
 
             <UsersList />
 
+            {children}
+
             <Toaster position="top-center" />
           </ThemeProvider>
-        </SessionProvider>
       </body>
     </html>
   );

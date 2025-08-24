@@ -2,40 +2,54 @@
 
 import Link from "next/link"
 import { Label } from "./ui/label"
-import { signIn } from "next-auth/react"
 import { cn } from "../lib/utils"
 import { Button } from "./ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 import { Input } from "./ui/input"
-import { useRouter } from "next/navigation"
-import { FormEvent } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { FormEvent, useState } from "react"
 import { toast } from "sonner"
-import Image from "next/image"
+import { authClient } from "../lib/auth-client"
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  const [state, setState] = useState({
+    email: searchParams.get("email") || "",
+    password: searchParams.get("password") || "",
+  })
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault()
     const formData = new FormData(event.target as HTMLFormElement)
-    const input = {
-      email: formData.get("email"),
-      password: formData.get("password"),
-    }
-    const result = await signIn("credentials", { ...input, redirect: false, redirectTo: '/dashboard' })
-    if (result.error === "CredentialsSignin") return toast.warning("Invalid credentials")
-    router.push("/dashboard")
+    const result = authClient.signIn.email({
+      email: formData.get("email")?.toString() || "",
+      password: formData.get("password")?.toString() || "",
+      callbackURL: '/dashboard'
+    }, {
+      onRequest: ctx => {
+        console.log('login request', ctx)
+      },
+      onSuccess: (ctx) => {
+        console.log('login successfully', ctx)
+        
+      },
+      onError: ctx => {
+        console.log('login failed', ctx)
+        toast.error("Invalid credentials", { richColors: true })
+      }
+    })
   }
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden p-0">
-        <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8" onSubmit={onSubmit} >
-            <div className="flex flex-col gap-6">
+        <CardContent className="flex p-0">
+          <form className="p-6 md:p-8 w-full" onSubmit={onSubmit} >
+            <div className="flex flex-col grow gap-6">
 
               <CardHeader className="flex flex-col items-center text-center" >
                 <CardTitle className="text-2xl font-bold" >Welcome back</CardTitle>
@@ -52,7 +66,7 @@ export function LoginForm({
                   type="email"
                   name="email"
                   placeholder="m@example.com"
-                  defaultValue={'email@email.com'}
+                  defaultValue={state.email}
                   autoFocus
                   required
                 />
@@ -67,7 +81,9 @@ export function LoginForm({
                     Forgot your password?
                   </Link>
                 </div>
-                <Input id="password" type="password" name="password" required defaultValue={'1234'} />
+                <Input id="password" type="password" name="password" required
+                  defaultValue={state.password}
+                />
               </div>
 
               <Button type="submit" className="w-full">
@@ -115,14 +131,15 @@ export function LoginForm({
               </div>
             </div>
           </form>
-          <div className="bg-muted relative hidden md:block">
+          {/* <div className="bg-muted relative hidden md:block">
             <Image
-
               src="/next.svg"
               alt="Image"
+              width={500}
+              height={500}
               className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
             />
-          </div>
+          </div> */}
         </CardContent>
         <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
           By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}

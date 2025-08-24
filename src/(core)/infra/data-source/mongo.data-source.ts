@@ -1,15 +1,12 @@
-import { Db, MongoClient, ObjectId } from 'mongodb'
+import { Db, MongoClient, ObjectId, UpdateResult, WithId } from 'mongodb'
+import { DataSource } from "./data-source.interface"
 
-export class MongoDataSource {
-    private uri: string
+export class MongoDataSource implements DataSource {
     private dbName: string
-    private _client: MongoClient
     private isConnected: boolean = false
 
-    constructor(uri: string, dbName: string) {
-        this.uri = uri
+    constructor(private _client: MongoClient, dbName: string) {
         this.dbName = dbName
-        this._client = new MongoClient(this.uri, {})
 
         this._client.on('connectionReady', () => {
             console.log('Connected to MongoDB')
@@ -36,12 +33,12 @@ export class MongoDataSource {
         await db.collection(collectionName).deleteMany({})
     }
 
-    async find(collectionName: string, { _id, ...query }: { _id?: string, [k: string]: unknown } = {}): Promise<unknown[]> {
+    async find<T>(collectionName: string, { id, ...query }: { id?: string, [k: string]: unknown } = {}): Promise<T[]> {
         const db = await this.getDb()
         const collection = db.collection(collectionName)
-        if (!!_id) query._id = new ObjectId(_id)
+        if (!!id) query._id = new ObjectId(id)
         const result = await collection.find(query).toArray()
-        return result
+        return result.map(({ _id, ...item }) => ({ ...item, id: _id.toString() } as T))
     }
 
     async insertOne(collectionName: string, item: Record<string, unknown>): Promise<{ insertedId: string, }> {
@@ -52,7 +49,7 @@ export class MongoDataSource {
 
     async update(collectionName: string, query: { id: string, [k: string]: unknown }, updateData: Record<string, unknown>) {
         const collection = await this.getCollection(collectionName)
-        return await collection.updateOne(
+        const result = await collection.updateOne(
             { _id: new ObjectId(query.id) },
             { $set: { ...updateData } },
         )

@@ -1,13 +1,12 @@
-import { buttonVariants, Button } from "@/src/components/ui/button";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardAction, CardFooter } from "@/src/components/ui/card";
-import { Input } from "@/src/components/ui/input";
 import Link from "next/link";
-import { Label } from "@/components/ui/label";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/src/components/ui/card";
+
+import { CreateUserForm } from "@/src/components/create-user-form";
 
 export default function Signup() {
     return (
         <>
-            <div className="bg-muted flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
+            <div className="bg-muted flex min-h-svh flex-col w-full items-center justify-center p-6 md:p-10">
                 <div className="w-full max-w-sm md:max-w-3xl">
                     <SignupComponent />
                 </div>
@@ -17,7 +16,7 @@ export default function Signup() {
 }
 
 const SignupComponent = () => (
-    <Card className="max-w-sm" >
+    <Card className="max-w-sm m-auto" >
         <CardHeader>
             <CardTitle className="text-2xl font-bold" >
                 Signup
@@ -28,25 +27,9 @@ const SignupComponent = () => (
             </CardDescription>
         </CardHeader>
 
-        <CardContent>
+        <CardContent >
 
-            <CardAction className="flex justify-between flex-col gap-4" >
-                <div className="flex flex-col gap-3" >
-                    <Label htmlFor="email">E-mail</Label>
-                    <Input required type="email" name="email" placeholder="Seu e-mail" />
-                </div>
-
-                <div className="flex flex-col gap-3" >
-                    <Label htmlFor="password">Password</Label>
-                    <Input required type="password" name="password" />
-                </div>
-
-                <div className="flex gap-3 items-stretch" >
-                    <Link href="/login" className={buttonVariants({ variant: "outline", className: "grow max-w-1/2" })} >Tenho cadastro</Link>
-                    <Button type="button" className="grow max-w-1/2 cursor-pointer" >Cadastrar</Button>
-                </div>
-
-            </CardAction>
+            <CreateUserForm />
 
         </CardContent>
 
