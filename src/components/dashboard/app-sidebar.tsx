@@ -18,12 +18,11 @@ import {
   IconSettings,
   IconUsers,
 } from "@tabler/icons-react"
-import { NavDocuments } from "./nav-documents"
-import { NavMain } from "./nav-main"
-import { NavSecondary } from "./nav-secondary"
-import { NavUser } from "./nav-user"
-import { SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarContent, SidebarFooter, Sidebar } from "./ui/sidebar"
-
+import { NavDocuments } from "../nav-documents"
+import { NavMain } from "../nav-main"
+import { NavSecondary } from "../nav-secondary"
+import { NavUser } from "../nav-user"
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar"
 
 const data = {
   user: {
