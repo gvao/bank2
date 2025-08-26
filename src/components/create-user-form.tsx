@@ -33,7 +33,7 @@ export function CreateUserForm() {
     
     async function onSubmit(data: formType) {
         
-        const result = await authClient.signUp.email({
+        await authClient.signUp.email({
             email: data.email,
             password: data.password,
             name: data.email.split("@")[0],

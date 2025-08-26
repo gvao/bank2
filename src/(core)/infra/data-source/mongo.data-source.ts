@@ -1,26 +1,22 @@
-import { Db, MongoClient, ObjectId, UpdateResult, WithId } from 'mongodb'
+import { Db, MongoClient, ObjectId } from 'mongodb'
 import { DataSource } from "./data-source.interface"
 
 export class MongoDataSource implements DataSource {
     private dbName: string
-    private isConnected: boolean = false
+    private _clientPromise: Promise<MongoClient>
 
-    constructor(private _client: MongoClient, dbName: string) {
+    constructor(clientPromise: Promise<MongoClient>, dbName: string) {
         this.dbName = dbName
+        this._clientPromise = clientPromise
+    }
 
-        this._client.on('connectionReady', () => {
-            console.log('Connected to MongoDB')
-            this.isConnected = true
-        })
-        this._client.on('connectionClosed', () => {
-            console.log('Disconnected from MongoDB')
-            this.isConnected = false
-        })
+    private async getClient(): Promise<MongoClient> {
+        return this._clientPromise
     }
 
     private async getDb(): Promise<Db> {
-        if (!this.isConnected) await this._client.connect()
-        return this._client.db(this.dbName)
+        const client = await this.getClient()
+        return client.db(this.dbName)
     }
 
     private async getCollection(collectionName: string) {
@@ -49,7 +45,7 @@ export class MongoDataSource implements DataSource {
 
     async update(collectionName: string, query: { id: string, [k: string]: unknown }, updateData: Record<string, unknown>) {
         const collection = await this.getCollection(collectionName)
-        const result = await collection.updateOne(
+        await collection.updateOne(
             { _id: new ObjectId(query.id) },
             { $set: { ...updateData } },
         )

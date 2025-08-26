@@ -1,5 +1,4 @@
 import { AppSidebar } from "@/src/components/dashboard/app-sidebar"
-import { SiteHeader } from "@/src/components/dashboard/site-header"
 import { SidebarProvider, SidebarInset } from "@/src/components/ui/sidebar"
 
 const Layout = ({ children }: { children: React.ReactNode }) => (

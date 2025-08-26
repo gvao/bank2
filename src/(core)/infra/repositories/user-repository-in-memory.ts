@@ -10,8 +10,9 @@ export class UserRepositoryInMemory implements UserRepository {
             this.add(UserFactory.create({ email: `email${password}@email.com`, password }))
         })
     }
-    async insert(user: User): Promise<void> {
+    async insert(user: User): Promise<{ insertedId: string; }> {
         this.users.push(user)
+        return { insertedId: user.id }
     }
 
     async getUsers({ }) {

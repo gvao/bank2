@@ -6,7 +6,7 @@ import { cn } from "../lib/utils"
 import { Button } from "./ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 import { Input } from "./ui/input"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useSearchParams } from "next/navigation"
 import { FormEvent, useState } from "react"
 import { toast } from "sonner"
 import { authClient } from "../lib/auth-client"
@@ -17,7 +17,7 @@ export function LoginForm({
 }: React.ComponentProps<"div">) {
   const searchParams = useSearchParams()
 
-  const [state, setState] = useState({
+  const [state] = useState({
     email: searchParams.get("email") || "",
     password: searchParams.get("password") || "",
   })
@@ -25,7 +25,7 @@ export function LoginForm({
   async function onSubmit(event: FormEvent) {
     event.preventDefault()
     const formData = new FormData(event.target as HTMLFormElement)
-    const result = authClient.signIn.email({
+    await authClient.signIn.email({
       email: formData.get("email")?.toString() || "",
       password: formData.get("password")?.toString() || "",
       callbackURL: '/dashboard'
@@ -35,7 +35,7 @@ export function LoginForm({
       },
       onSuccess: (ctx) => {
         console.log('login successfully', ctx)
-        
+
       },
       onError: ctx => {
         console.log('login failed', ctx)
