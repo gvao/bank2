@@ -18,11 +18,11 @@ import {
   IconSettings,
   IconUsers,
 } from "@tabler/icons-react"
-import { NavDocuments } from "../nav-documents"
 import { NavMain } from "../nav-main"
-import { NavSecondary } from "../nav-secondary"
 import { NavUser } from "../nav-user"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar"
+import { authClient } from "@/src/lib/auth-client"
+import { User } from "../types/user.interface"
 
 const data = {
   user: {
@@ -142,6 +142,16 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const [user, setUser] = React.useState<User | null>(null)
+
+  React.useEffect(() => {
+    (async () => {
+      const { data } = await authClient.getSession()
+      if (!!data?.user) setUser(data.user!)
+    })()
+  }, [])
+
+  console.log({ user })
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -161,11 +171,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavDocuments items={data.documents} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        {/* <NavDocuments items={data.documents} /> */}
+        {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={user} />
       </SidebarFooter>
     </Sidebar>
   )
